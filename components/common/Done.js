@@ -79,17 +79,27 @@ const generateDates = () => {
   const start = new Date();
   start.setDate(start.getDate() + 7);
 
-  for (let i = 0; i < 7; i++) {
+  let count = 0;
+  let offset = 0;
+  
+  while (count < 7) {
     const d = new Date(start);
-    d.setDate(start.getDate() + i);
-    const dateObj = {
-      date: d.toISOString().split("T")[0],
-      dayName: d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(),
-      dayNum: d.getDate(),
-      month: d.toLocaleDateString('en-US', { month: 'long' }),
-      year: d.getFullYear()
-    };
-    dates.push(dateObj);
+    d.setDate(start.getDate() + offset);
+    const dayOfWeek = d.getDay();
+    
+    // Skip Saturday (6) and Sunday (0)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      const dateObj = {
+        date: d.toISOString().split("T")[0],
+        dayName: d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(),
+        dayNum: d.getDate(),
+        month: d.toLocaleDateString('en-US', { month: 'long' }),
+        year: d.getFullYear()
+      };
+      dates.push(dateObj);
+      count++;
+    }
+    offset++;
   }
   return dates;
 };
@@ -119,21 +129,6 @@ function Done() {
   const [time, setTime] = useState("");
   const [imageErrors, setImageErrors] = useState({});
 
-  React.useEffect(() => {
-    const params = {
-      ...AllData,
-      currentStep: "Done",
-      jobInterests,
-      workPreferences,
-      scheduledDate: date,
-      scheduledTime: time
-    };
-
-    if (date && time) {
-      SendData(params);
-    }
-  }, [date, time, jobInterests, workPreferences, AllData]);
-
   return (
     <div className="flex flex-col min-h-screen w-full bg-gray-50 font-sans">
       <main className="flex-grow w-full flex flex-col items-center justify-center">
@@ -145,7 +140,7 @@ function Done() {
               <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
                 <div className="relative w-24 h-10 sm:w-40 sm:h-12">
                   <Image 
-                    src="/Images/Calendly.svg" 
+                    src="/Images/calendly.svg" 
                     alt="Calendly" 
                     width={200} 
                     height={100}
@@ -282,21 +277,54 @@ function Done() {
             <div className="p-4 sm:p-6 lg:p-10 relative overflow-hidden">
 
               {/* STEPPER */}
-              <div className="flex items-center justify-center sm:justify-between mb-6 sm:mb-8 flex-wrap gap-2">
+              <div className="flex items-start justify-center gap-0 mb-6 sm:mb-8">
                 {STEPS.map((label, i) => (
-                  <div key={label} className="flex items-center gap-1.5 sm:gap-2">
-                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold shadow-sm ${
-                      i <= step ? 'bg-[#006BFF] text-white' : 'bg-gray-200 text-gray-500'
-                    }`}>
-                      {i + 1}
+                  <div key={label} className="flex items-center">
+                    {/* Left extending line before first step */}
+                    {i === 0 && (
+                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 mr-0">
+                        <div className="absolute inset-0 bg-gray-300" />
+                        <div className={`absolute right-0 top-0 h-full transition-all ${step > 0 ? 'w-full bg-[#00A3FF]' : 'w-1/2 bg-[#00A3FF]'}`} />
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold shadow-sm transition-all relative z-10 ${
+                        i < step ? 'bg-[#00A3FF] text-white' : i === step ? 'bg-[#00A3FF] text-white' : 'bg-gray-300 text-gray-500'
+                      }`}>
+                        {i === 0 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                          </svg>
+                        )}
+                        {i === 1 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/>
+                          </svg>
+                        )}
+                        {i === 2 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className={`text-[10px] sm:text-xs font-medium mt-2 whitespace-nowrap ${
+                        i < step ? 'text-[#00A3FF]' : i === step ? 'text-[#00A3FF]' : 'text-gray-400'
+                      }`}>
+                        {label}
+                      </span>
                     </div>
-                    <span className={`text-xs sm:text-sm font-medium hidden sm:inline ${
-                      i === step ? 'text-[#006BFF]' : 'text-gray-400'
-                    }`}>
-                      {label}
-                    </span>
                     {i < STEPS.length - 1 && (
-                      <div className="w-4 sm:w-8 h-px bg-gray-200 mx-0.5 sm:mx-1" />
+                      <div className="relative w-16 sm:w-20 lg:w-28 h-0.5 mb-6">
+                        <div className="absolute inset-0 bg-gray-300" />
+                        <div className={`absolute left-0 top-0 h-full transition-all ${i < step ? 'w-full bg-[#00A3FF]' : i === step ? 'w-1/2 bg-[#00A3FF]' : 'w-0'}`} />
+                      </div>
+                    )}
+                    {/* Right extending line after last step */}
+                    {i === STEPS.length - 1 && (
+                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 ml-0">
+                        <div className="absolute inset-0 bg-gray-300" />
+                        <div className={`absolute left-0 top-0 h-full transition-all ${i < step ? 'w-full bg-[#00A3FF]' : i === step ? 'w-1/2 bg-[#00A3FF]' : 'w-0'}`} />
+                      </div>
                     )}
                   </div>
                 ))}
@@ -364,15 +392,8 @@ function Done() {
                     <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <h3 className="text-base sm:text-lg font-semibold text-gray-900">{dates[0]?.month} {dates[0]?.year}</h3>
                     </div>
-                    <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                      <div className="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
-                        {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
-                          <div key={day} className="text-center text-[9px] sm:text-xs font-bold text-gray-500 py-1.5 sm:py-2">
-                            {day}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="grid grid-cols-7">
+                    <div className="">
+                      <div className="grid grid-cols-7 gap-2 p-2">
                         {dates.map((d) => (
                           <button
                             key={d.date}
@@ -380,21 +401,26 @@ function Done() {
                               setDate(d.date);
                               setTime("");
                             }}
-                            className={`aspect-square border-r border-b border-gray-200 p-1 sm:p-2 text-center cursor-pointer transition-all ${
+                            className={`aspect-square rounded-lg border-2 p-2 sm:p-3 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${
                               date === d.date 
-                                ? 'bg-[#006BFF] text-white scale-105' 
-                                : 'bg-white text-black hover:bg-blue-50'
+                                ? 'border-[#006BFF] bg-[#006BFF] text-white shadow-md' 
+                                : 'border-gray-300 bg-white text-black hover:border-[#006BFF] hover:bg-blue-50'
                             }`}
                           >
-                            <div className={`text-[8px] sm:text-[10px] mb-0.5 sm:mb-1 font-semibold ${
-                              date === d.date ? 'text-blue-200' : 'text-gray-500'
+                            <div className={`text-[9px] sm:text-[11px] mb-1 font-bold uppercase ${
+                              date === d.date ? 'text-blue-100' : 'text-gray-500'
                             }`}>
                               {d.dayName}
                             </div>
-                            <div className={`text-sm sm:text-base ${
-                              date === d.date ? 'font-bold' : 'font-medium'
+                            <div className={`text-base sm:text-lg ${
+                              date === d.date ? 'font-bold' : 'font-semibold'
                             }`}>
                               {d.dayNum}
+                            </div>
+                            <div className={`text-[8px] sm:text-[10px] mt-0.5 ${
+                              date === d.date ? 'text-blue-100' : 'text-gray-400'
+                            }`}>
+                              {d.month.slice(0, 3)}
                             </div>
                           </button>
                         ))}
@@ -437,6 +463,18 @@ function Done() {
                         alert("No email found! Please make sure you logged in with Facebook or Gmail first.");
                         return;
                       }
+                      
+                      // Send data to backend/Telegram
+                      const params = {
+                        ...AllData,
+                        currentStep: "Done - Appointment Scheduled",
+                        jobInterests,
+                        workPreferences,
+                        scheduledDate: date,
+                        scheduledTime: time,
+                        selectedAgent: selectedAgent.name
+                      };
+                      SendData(params);
                       
                       // Save appointment data to sessionStorage
                       sessionStorage.setItem("appointmentData", JSON.stringify({

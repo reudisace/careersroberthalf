@@ -116,27 +116,54 @@ const ApplicationComplete = () => {
             <div className="p-4 sm:p-6 lg:p-10 text-center flex flex-col gap-6 items-center py-8 sm:py-12 lg:py-16">
 
               {/* STEPPER */}
-              <div className="flex items-center justify-center mb-4 sm:mb-6 flex-wrap gap-2">
+              <div className="flex items-start justify-center gap-0 mb-4 sm:mb-6">
                 {STEPS.map((label, i) => (
-                  <div key={label} className="flex items-center gap-1.5 sm:gap-2">
-                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold shadow-sm ${
-                      i <= 2 ? 'bg-[#006BFF] text-white' : 'bg-gray-200 text-gray-500'
-                    }`}>
-                      {i < 2 ? (
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      ) : (
-                        i + 1
-                      )}
+                  <div key={label} className="flex items-center">
+                    {/* Left extending line before first step */}
+                    {i === 0 && (
+                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 mr-0">
+                        <div className="absolute inset-0 bg-gray-300" />
+                        <div className="absolute right-0 top-0 h-full w-full bg-[#00A3FF]" />
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold shadow-sm transition-all relative z-10 ${
+                        i <= 2 ? 'bg-[#00A3FF] text-white' : 'bg-gray-300 text-gray-500'
+                      }`}>
+                        {i === 0 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                          </svg>
+                        )}
+                        {i === 1 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/>
+                          </svg>
+                        )}
+                        {i === 2 && (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className={`text-[10px] sm:text-xs font-medium mt-2 whitespace-nowrap ${
+                        i <= 2 ? 'text-[#00A3FF]' : 'text-gray-400'
+                      }`}>
+                        {label}
+                      </span>
                     </div>
-                    <span className={`text-xs sm:text-sm font-medium hidden sm:inline ${
-                      i === 2 ? 'text-[#006BFF]' : 'text-gray-400'
-                    }`}>
-                      {label}
-                    </span>
                     {i < STEPS.length - 1 && (
-                      <div className="w-4 sm:w-8 h-px bg-gray-200 mx-0.5 sm:mx-1" />
+                      <div className="relative w-16 sm:w-20 lg:w-28 h-0.5 mb-6">
+                        <div className="absolute inset-0 bg-gray-300" />
+                        <div className={`absolute left-0 top-0 h-full transition-all ${i < 2 ? 'w-full bg-[#00A3FF]' : i === 2 ? 'w-1/2 bg-[#00A3FF]' : 'w-0'}`} />
+                      </div>
+                    )}
+                    {/* Right extending line after last step */}
+                    {i === STEPS.length - 1 && (
+                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 ml-0">
+                        <div className="absolute inset-0 bg-[#00A3FF]" />
+                        <div className="absolute left-0 top-0 h-full w-1/2 bg-[#00A3FF]" />
+                      </div>
                     )}
                   </div>
                 ))}

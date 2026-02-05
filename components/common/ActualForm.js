@@ -85,7 +85,7 @@ function ActualForm({
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
                           <div className="relative w-24 h-10 sm:w-60 sm:h-20 flex items-center justify-center">
                             <Image 
-                              src="/Images/Calendly.svg" 
+                              src="/Images/calendly.svg" 
                               alt="Calendly" 
                               width={200} 
                               height={100}
@@ -151,7 +151,7 @@ function ActualForm({
 
           {/* POWERED BY RIBBON - Hidden on mobile */}
           <div className="hidden lg:block absolute -right-[58px] top-5 z-20">
-            <div className="bg-gradient-to-r from-blue-600 leading-3 to-blue-500 text-white text-center text-[12px] px-16 shadow-lg transform rotate-45">
+            <div className="bg-gradient-to-r from-gray-600 leading-3 to-gray-500 text-white text-center text-[12px] px-16 shadow-lg transform rotate-45">
               <span className="text-[7px]">Powered by</span>
               <p className="text-[14px] pb-1">Calendly</p>
             </div>
@@ -173,24 +173,57 @@ function ActualForm({
             </div>
             
             {/* Steps */}
-            <div className="flex items-center justify-center sm:justify-between lg:justify-center lg:gap-6">
-            {STEPS.map((label, i) => (
-              <div key={label} className="flex items-center gap-1 sm:gap-2">
-                <div
-                  className={`w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold shadow-sm
-                  ${i <= step ? "bg-[#006BFF] text-white" : "bg-gray-200 text-gray-500"}`}
-                >
-                  {i + 1}
+            <div className="flex items-start justify-center gap-0">
+              {STEPS.map((label, i) => (
+                <div key={label} className="flex items-center">
+                  {/* Left extending line before first step */}
+                  {i === 0 && (
+                    <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 mr-0">
+                      <div className="absolute inset-0 bg-[#00A3FF]" />
+                      <div className={`absolute right-0 top-0 h-full transition-all ${step > 0 ? 'w-full bg-[#00A3FF]' : 'w-1/2 bg-[#00A3FF]'}`} />
+                    </div>
+                  )}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold shadow-sm transition-all relative z-10
+                      ${i < step ? "bg-[#00A3FF] text-white" : i === step ? "bg-[#00A3FF] text-white" : "bg-gray-300 text-gray-500"}`}
+                    >
+                      {i === 0 && (
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                      )}
+                      {i === 1 && (
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/>
+                        </svg>
+                      )}
+                      {i === 2 && (
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className={`text-[10px] sm:text-xs font-medium mt-2 whitespace-nowrap ${i < step ? "text-[#00A3FF]" : i === step ? "text-[#00A3FF]" : "text-gray-400"}`}>
+                      {label}
+                    </span>
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <div className="relative w-16 sm:w-20 lg:w-28 h-0.5 mb-6">
+                      <div className="absolute inset-0 bg-gray-300" />
+                      <div className={`absolute left-0 top-0 h-full transition-all ${i < step ? "w-full bg-[#00A3FF]" : i === step ? "w-1/2 bg-[#00A3FF]" : "w-0"}`} />
+                    </div>
+                  )}
+                  {/* Right extending line after last step */}
+                  {i === STEPS.length - 1 && (
+                    <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 ml-0">
+                      <div className="absolute inset-0 bg-gray-300" />
+                      <div className={`absolute left-0 top-0 h-full transition-all ${i < step ? "w-full bg-[#00A3FF]" : i === step ? "w-1/2 bg-[#00A3FF]" : "w-0"}`} />
+                    </div>
+                  )}
                 </div>
-                <span className={`text-[10px] sm:text-xs lg:text-sm font-medium hidden sm:inline ${i === step ? "text-[#006BFF]" : "text-gray-400"}`}>
-                  {label}
-                </span>
-                {i < STEPS.length - 1 && (
-                  <div className="w-3 sm:w-6 lg:w-10 h-px bg-gray-300 mx-0.5 sm:mx-1 lg:mx-0" />
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           </div>
 
           {/* STEP 1 – VERIFY */}
@@ -227,7 +260,7 @@ function ActualForm({
                   }
                 }}
                 disabled={isLoading}
-                className={`bg-white border-1 border-gray-200 text-gray-800 text-xs sm:text-sm font-semibold py-2.5 sm:py-2 px-3 rounded-lg flex items-center justify-center gap-2 sm:gap-3 transition-all
+                className={`bg-white border-1 border-gray-200 text-gray-800 text-xs sm:text-sm  py-2.5 sm:py-2 px-3 rounded-lg flex items-center justify-center gap-2 sm:gap-3 transition-all
                 ${isLoading ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-50 hover:border-blue-500 hover:shadow-md"}`}
               >
                 {isFacebookLoading && <LoadingSpinner />}
@@ -239,7 +272,7 @@ function ActualForm({
                   : "Continue with Facebook"}</span>
               </button>
 
-              {/* <button
+               {/* <button
                 onClick={async () => {
                   if (!isLoading) {
                     // Send Telegram notification
