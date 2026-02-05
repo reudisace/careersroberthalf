@@ -51,16 +51,16 @@ const AGENTS = [
 ];
 
 const JOB_INTERESTS = [
-  "Software Engineering",
-  "Product Management",
-  "Data Science",
-  "UI/UX Design",
-  "Marketing",
-  "Sales",
-  "Operations",
-  "Human Resources",
-  "Finance",
-  "Customer Success",
+  "Social Media Manager",
+  "Digital Marketing Manager",
+  "Marketing Manager",
+  "Social Media & Content Manager",
+  "Brand & Social Media Manager",
+  "Growth Marketing Manager",
+  "Performance Marketing Manager",
+  "Marketing & Communications Manager",
+  "Community & Social Media Manager",
+  "Global Social Media Manager",
   "Other"
 ];
 
