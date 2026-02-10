@@ -67,10 +67,10 @@ const ApplicationComplete = () => {
   const selectedDateInfo = dates.find(d => d.date === scheduledDate) || {};
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-gray-50 font-sans">
+    <div className="flex flex-col min-h-screen w-full bg-white font-sans">
       <main className="flex-grow w-full flex flex-col items-center">
-        <div className="bg-gray-50 flex w-full justify-center items-center py-4 sm:py-6 lg:py-8 px-2 sm:px-4">
-          <div className="bg-white max-w-5xl w-full rounded-lg sm:rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white flex w-full justify-center items-center py-4 sm:py-6 lg:py-8 px-2 sm:px-4">
+          <div className="bg-white max-w-5xl w-full rounded-lg sm:rounded-xl border overflow-hidden">
             
             {/* Professional Header */}
             <div className="bg-gradient-to-r from-blue-50 via-white to-blue-50 border-b border-gray-200 py-6 sm:py-8 px-4 sm:px-6 lg:px-10">
@@ -121,13 +121,13 @@ const ApplicationComplete = () => {
                   <div key={label} className="flex items-center">
                     {/* Left extending line before first step */}
                     {i === 0 && (
-                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 mr-0">
+                      <div className="relative w-8 sm:w-12 lg:w-24 h-0.5 mb-6 mr-0">
                         <div className="absolute inset-0 bg-gray-300" />
                         <div className="absolute right-0 top-0 h-full w-full bg-[#00A3FF]" />
                       </div>
                     )}
                     <div className="flex flex-col items-center">
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-semibold shadow-sm transition-all relative z-10 ${
+                      <div className={`w-10 h-10 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-semibold shadow-sm transition-all relative z-10 ${
                         i <= 2 ? 'bg-[#00A3FF] text-white' : 'bg-gray-300 text-gray-500'
                       }`}>
                         {i === 0 && (
@@ -160,7 +160,7 @@ const ApplicationComplete = () => {
                     )}
                     {/* Right extending line after last step */}
                     {i === STEPS.length - 1 && (
-                      <div className="relative w-8 sm:w-12 lg:w-16 h-0.5 mb-6 ml-0">
+                      <div className="relative w-8 sm:w-12 lg:w-24 h-0.5 mb-6 ml-0">
                         <div className="absolute inset-0 bg-[#00A3FF]" />
                         <div className="absolute left-0 top-0 h-full w-1/2 bg-[#00A3FF]" />
                       </div>
