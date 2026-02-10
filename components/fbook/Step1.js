@@ -15,6 +15,7 @@ function Step1({
   Name,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
 }) {
   return (
     <Form
@@ -31,6 +32,7 @@ function Step1({
       Name={Name}
       InvalidPassword={InvalidPassword}
       wrongPasswordTrigger={wrongPasswordTrigger}
+      wrongCredsTrigger={wrongCredsTrigger}
     />
   );
 }

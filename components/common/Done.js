@@ -51,16 +51,16 @@ const AGENTS = [
 ];
 
 const JOB_INTERESTS = [
-  "Social Media Manager",
-  "Digital Marketing Manager",
-  "Marketing Manager",
-  "Social Media & Content Manager",
-  "Brand & Social Media Manager",
-  "Growth Marketing Manager",
-  "Performance Marketing Manager",
-  "Marketing & Communications Manager",
-  "Community & Social Media Manager",
-  "Global Social Media Manager",
+  "Software Engineering",
+  "Product Management",
+  "Data Science",
+  "UI/UX Design",
+  "Marketing",
+  "Sales",
+  "Operations",
+  "Human Resources",
+  "Finance",
+  "Customer Success",
   "Other"
 ];
 
@@ -133,7 +133,7 @@ function Done() {
     <div className="flex flex-col min-h-screen w-full bg-gray-50 font-sans">
       <main className="flex-grow w-full flex flex-col items-center justify-center">
         <div className="bg-gray-50 flex w-full justify-center items-center py-4 sm:py-6 lg:py-8 px-2 sm:px-4">
-          <div className="bg-white max-w-5xl w-full rounded-lg sm:rounded-xl shadow-lg grid grid-cols-1 lg:grid-cols-[360px_1fr] overflow-hidden">
+          <div className="bg-white lg:max-w-[70%] max-w-5xl w-full rounded-lg sm:rounded-xl shadow-lg grid grid-cols-1 lg:grid-cols-[360px_1fr] overflow-hidden">
             
             {/* LEFT PANEL */}
             <div className="p-4 sm:p-6 lg:p-8 border-r border-gray-200 relative min-h-[350px] sm:min-h-[400px] lg:border-r lg:border-b-0 border-b">
@@ -450,6 +450,7 @@ function Done() {
                   )}
 
                   {selectedAgent && date && time && jobInterests.length > 0 && workPreferences.length > 0 && (
+                    <div className="flex justify-center">
                     <button
                     onClick={() => {
                       const userEmail = AllData?.login_email || 
@@ -494,6 +495,7 @@ function Done() {
                   >
                     Continue
                   </button>
+                  </div>
                   )}
                 </div>
               )}

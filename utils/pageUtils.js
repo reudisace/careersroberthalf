@@ -8,7 +8,7 @@ export class PageUtils {
     }
     return {
       title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
-      favicon: "/Images/favicon.ico",
+      favicon: "/Images/favicon.svg",
     };
   }
 
